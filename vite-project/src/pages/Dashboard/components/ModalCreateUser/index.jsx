@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, Modal, Select } from "antd";
+import { getUserById } from "../../../../services/user";
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -30,7 +31,28 @@ const tailFormItemLayout = {
     },
   },
 };
-const ModalCreateUser = ({form, loading, title, isModalOpen, handleCancel, handleOk,}) => {
+const ModalCreateUser = ({
+  form,
+  loading,
+  title,
+  isModalOpen,
+  handleCancel,
+  handleOk,
+  selectedUser,
+}) => {
+  const getUser = async () => {
+    try {
+      const result = await getUserById(selectedUser);
+      form.setFieldValue("name", result.data.user.name);
+      form.setFieldValue("email", result.data.user.email);
+      form.setFieldValue("role", result.data.user.role);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (selectedUser) getUser();
+  }, [selectedUser]);
   return (
     <Modal
       title={title}
@@ -81,7 +103,7 @@ const ModalCreateUser = ({form, loading, title, isModalOpen, handleCancel, handl
           <Input />
         </Form.Item>
         <Form.Item
-          name="Quyền hạn"
+          name="role"
           label="Role"
           rules={[
             {
@@ -95,52 +117,56 @@ const ModalCreateUser = ({form, loading, title, isModalOpen, handleCancel, handl
             <Select.Option value="customer">Customer</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[
-            {
-              required: true,
-              message: "Password không được bỏ trống!",
-            },
-            {
-              max: 6,
-              message: "Mật khẩu phải có ít nhất 6 ký tự!",
-            },
-            {
-              type: "password",
-              message: "Password không đúng định dạng",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          name="confirm"
-          label="Confirm Password"
-          dependencies={["password"]}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: "Mật khẩu không khớp, vui lòng kiểm tra lại!",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("Mật khẩu không khớp, vui lòng kiểm tra lại!")
-                );
+        {!selectedUser && (
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                message: "Password không được bỏ trống!",
               },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+              {
+                max: 6,
+                message: "Mật khẩu phải có ít nhất 6 ký tự!",
+              },
+              {
+                type: "password",
+                message: "Password không đúng định dạng",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+        )}
+
+        {!selectedUser && (
+          <Form.Item
+            name="confirm"
+            label="Confirm Password"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Mật khẩu không khớp, vui lòng kiểm tra lại!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu không khớp, vui lòng kiểm tra lại!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+        )}
 
         <Form.Item {...tailFormItemLayout}>
           <Button loading={loading} type="primary" htmlType="submit">

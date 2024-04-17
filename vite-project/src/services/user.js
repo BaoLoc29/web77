@@ -15,9 +15,23 @@ const createUser = (data) => {
     return axiosInstanceAuth.post('/user/create-user', data);
 }
 
+const getUserById = (userId) => {
+    return axiosInstanceAuth.get(`/user/${userId}`)
+}
+
+const editUser = (userId, data) => {
+    return axiosInstanceAuth.put(`/user/${userId}`, data)
+}
+
+const deleteUser = (userId) => {
+    return axiosInstanceAuth.delete(`/user/${userId}`)
+}
 export {
     login,
     signup,
     getPagingUser,
-    createUser
+    createUser,
+    getUserById,
+    editUser,
+    deleteUser
 }

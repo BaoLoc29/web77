@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { TbCategoryFilled } from "react-icons/tb";
+
 import { FaUser } from "react-icons/fa";
 import { Layout, Menu, Button, theme } from "antd";
 import { Outlet } from "react-router";
@@ -35,8 +31,8 @@ const AuthLayout = () => {
             },
             {
               key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "nav 2",
+              icon: <TbCategoryFilled />,
+              label: "Quản lý danh mục",
             },
             {
               key: "3",

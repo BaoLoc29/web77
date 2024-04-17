@@ -8,6 +8,7 @@ import AuthLayout from "./layouts/AuthLayout/index";
 import isObjctEmpty from "./utils/isObjectEmpty";
 import Dashboard from "./pages/Dashboard/index";
 import { useSelector } from "react-redux";
+import Category from "./pages/Category";
 function App() {
   const user = useSelector((state) => state.users.user);
   console.log(user);
@@ -23,6 +24,7 @@ function App() {
         ) : (
           <Route path="/" element={<AuthLayout />}>
             <Route path="" element={<Dashboard />} />
+            <Route path="/category" element={<Category />} />
           </Route>
         )}
       </Routes>
